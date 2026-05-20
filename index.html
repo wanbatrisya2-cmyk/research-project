@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full bg-slate-50">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Paddy Growth Rate Analysis - Malaysian Food Security Optimizer</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Google Fonts: Inter & JetBrains Mono -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .math-font {
+            font-family: 'JetBrains Mono', monospace;
+        }
+    </style>
+</head>
+<body class="h-full flex flex-col text-slate-800">
+
+    <!-- Navigation Bar -->
+    <nav class="bg-emerald-800 text-white shadow-md border-b border-emerald-900 shrink-0">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex items-center space-x-3">
+                    <div class="bg-emerald-600 p-2 rounded-lg text-white shadow-inner">
+                        <i class="fa-solid fa-wheat-awn text-xl animate-pulse"></i>
+                    </div>
+                    <div>
+                        <span class="font-bold text-lg tracking-wide block leading-tight">PaddyGrowth Derivative Simulator</span>
+                        <span class="text-xs text-emerald-200">SFM: Food Security & Bioscience Analytics (Malaysia)</span>
+                    </div>
+                </div>
+                <div class="hidden md:flex space-x-4 text-xs font-semibold bg-emerald-900/50 px-3 py-1.5 rounded-full border border-emerald-700/50">
+                    <span class="text-emerald-300">Target Variety: <strong class="text-white">MARDI MR297 (Kedah Model)</strong></span>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Scrollable Container -->
+    <main class="flex-1 overflow-y-auto">
+        <div class="max-w-7xl mx-auto p-4 sm:p-6 lg:p-8 space-y-6">
+            
+            <!-- Problem Context & Introduction Section -->
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
+                <div class="flex flex-col lg:flex-row gap-6 items-start lg:items-center">
+                    <div class="flex-1 space-y-3">
+                        <div class="inline-flex items-center gap-2 bg-emerald-50 text-emerald-700 px-3 py-1 rounded-full text-xs font-semibold">
+                            <span class="flex h-2 w-2 rounded-full bg-emerald-500 animate-ping"></span>
+                            Bioscience Scenario: Rice Self-Sufficiency (SSL)
+                        </div>
+                        <h1 class="text-2xl sm:text-3xl font-bold text-slate-900 tracking-tight">
+                            Applying Derivatives to Optimize Paddy Rice Development
+                        </h1>
+                        <p class="text-slate-600 text-sm leading-relaxed">
+                            Malaysia currently aims to achieve 100% Self-Sufficiency Level (SSL) for rice. Under the Muda Agricultural Development Authority (MADA) in Kedah, optimizing crop vegetative growth ensures high yields. By tracking plant height $f(x)$ over its 120-day cycle, the rate of change (first derivative) $f'(x)$ tells bioscience researchers exactly <strong>when</strong> the plant is accumulating biomass fastest. This crucial milestone marks the peak nutrient demand window, telling farmers precisely when to fertilize and flood fields.
+                        </p>
+                    </div>
+                    <div class="w-full lg:w-fit bg-slate-50 border border-slate-200 rounded-xl p-4 shrink-0">
+                        <div class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2">Real Malaysian Data Reference:</div>
+                        <ul class="space-y-1.5 text-xs text-slate-600">
+                            <li>
+                                <i class="fa-solid fa-book text-emerald-600 mr-2"></i>
+                                <span class="font-medium">MARDI Rice Variety MR297 Technical Handbook</span>
+                            </li>
+                            <li>
+                                <i class="fa-solid fa-file-invoice-dollar text-emerald-600 mr-2"></i>
+                                <span class="font-medium">MADA Annual Paddy Growth & Yield Statistics</span>
+                            </li>
+                            <li>
+                                <i class="fa-solid fa-globe text-emerald-600 mr-2"></i>
+                                <span class="font-medium">DOA Malaysia Strategic Rice Irrigation Guideline</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Dashboard Grid -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                
+                <!-- Left Panel: Formulas & Controls -->
+                <div class="space-y-6 lg:col-span-1">
+                    
+                    <!-- Mathematical Equations Card -->
+                    <div class="bg-gradient-to-br from-slate-900 to-slate-800 text-white rounded-2xl p-6 shadow-md border border-slate-900 relative overflow-hidden">
+                        <div class="absolute -right-10 -bottom-10 text-slate-700/20 text-9xl font-bold">f'(x)</div>
+                        <h2 class="text-md font-bold text-emerald-400 mb-4 flex items-center gap-2">
+                            <i class="fa-solid fa-square-root-variable text-white"></i>
+                            Mathematical Modeling
+                        </h2>
+                        
+                        <!-- Logistic Growth Formula f(x) -->
+                        <div class="mb-5 space-y-1.5 relative z-10">
+                            <span class="text-xs text-slate-400 font-semibold block uppercase">1. Plant Growth Function, $f(x)$</span>
+                            <div class="bg-slate-950/60 p-3 rounded-lg border border-slate-700/30">
+                                <div class="math-font text-center text-sm sm:text-md text-emerald-300">
+                                    f(x) = L / (1 + e<sup>-k(x - x₀)</sup>)
+                                </div>
+                            </div>
+                            <span class="text-[11px] text-slate-400 block leading-tight">
+                                Models standard sigmoidal growth. <strong class="text-white">L</strong> is max height (cm), <strong class="text-white">k</strong> is growth coefficient, and <strong class="text-white">x₀</strong> is growth inflection day.
+                            </span>
+                        </div>
+
+                        <!-- Derivative Formula f'(x) -->
+                        <div class="space-y-1.5 relative z-10">
+                            <span class="text-xs text-slate-400 font-semibold block uppercase">2. Instantaneous Growth Rate, $f'(x)$</span>
+                            <div class="bg-slate-950/60 p-3 rounded-lg border border-slate-700/30">
+                                <div class="math-font text-center text-sm sm:text-md text-emerald-300">
+                                    f'(x) = [L · k · e<sup>-k(x - x₀)</sup>] / (1 + e<sup>-k(x - x₀)</sup>)<sup>2</sup>
+                                </div>
+                            </div>
+                            <span class="text-[11px] text-slate-400 block leading-tight">
+                                Yields the daily rate of elongation (<strong class="text-white">cm / day</strong>) at Day $x$ via the Chain Rule.
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Interactive Scenario Controls Card -->
+                    <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
+                        <h2 class="text-sm font-bold text-slate-900 mb-4 flex items-center gap-2">
+                            <i class="fa-solid fa-sliders text-emerald-600"></i>
+                            Select Growth Scenario
+                        </h2>
+                        <div class="space-y-3">
+                            <!-- Button Scenario 1 -->
+                            <button id="btn-optimal" onclick="setScenario('optimal')" class="w-full text-left p-3.5 rounded-xl border-2 border-emerald-500 bg-emerald-50/50 hover:bg-emerald-50 transition duration-150 flex items-center justify-between">
+                                <div class="space-y-0.5">
+                                    <span class="font-bold text-xs text-emerald-950 block">Optimal Season (Standard)</span>
+                                    <span class="text-[11px] text-slate-500 block">Baseline healthy variety MR297. Max height = 110cm</span>
+                                </div>
+                                <span class="bg-emerald-600 text-white text-[10px] py-0.5 px-2 rounded-full font-semibold">Active</span>
+                            </button>
+
+                            <!-- Button Scenario 2 -->
+                            <button id="btn-drought" onclick="setScenario('drought')" class="w-full text-left p-3.5 rounded-xl border border-slate-200 hover:border-amber-300 hover:bg-amber-50/20 transition duration-150 flex items-center justify-between">
+                                <div class="space-y-0.5">
+                                    <span class="font-bold text-xs text-amber-950 block">El Niño Drought Stress</span>
+                                    <span class="text-[11px] text-slate-500 block">Drought limits max height to 85cm, delay growth peak.</span>
+                                </div>
+                                <span class="text-slate-400 text-[10px]"><i class="fa-solid fa-circle text-xs"></i></span>
+                            </button>
+
+                            <!-- Button Scenario 3 -->
+                            <button id="btn-optimized" onclick="setScenario('optimized')" class="w-full text-left p-3.5 rounded-xl border border-slate-200 hover:border-sky-300 hover:bg-sky-50/20 transition duration-150 flex items-center justify-between">
+                                <div class="space-y-0.5">
+                                    <span class="font-bold text-xs text-sky-950 block">Nitrogen-Optimized Paddy</span>
+                                    <span class="text-[11px] text-slate-500 block">Precision agriculture yields 115cm height with steep growth slope.</span>
+                                </div>
+                                <span class="text-slate-400 text-[10px]"><i class="fa-solid fa-circle text-xs"></i></span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Center/Right Panel: Interactive Chart and Calculation Readout -->
+                <div class="lg:col-span-2 space-y-6">
+                    
+                    <!-- Chart Canvas Card -->
+                    <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-4 sm:p-6 flex flex-col justify-between">
+                        <div>
+                            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 mb-4">
+                                <div>
+                                    <h2 class="text-lg font-bold text-slate-900">MR297 Growth & Derivative Analysis</h2>
+                                    <p class="text-xs text-slate-500">Click any point along the curve below to analyze instantaneous growth rate.</p>
+                                </div>
+                                <div class="flex items-center gap-3 text-xs">
+                                    <span class="inline-flex items-center gap-1.5"><span class="h-2.5 w-2.5 rounded-full bg-emerald-600 block"></span> $f(x)$ Height (cm)</span>
+                                    <span class="inline-flex items-center gap-1.5"><span class="h-2.5 w-2.5 rounded-full bg-amber-500 block"></span> $f'(x)$ Growth Rate (cm/day)</span>
+                                </div>
+                            </div>
+                            <!-- Chart Container -->
+                            <div class="relative h-[250px] sm:h-[350px]">
+                                <canvas id="growthChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Dynamic Analysis Console / Display Card -->
+                    <div id="dynamic-display" class="bg-white rounded-2xl shadow-sm border-2 border-slate-200 p-6 transition duration-300">
+                        <div class="flex items-center gap-3 border-b border-slate-100 pb-4 mb-4">
+                            <div id="display-icon-bg" class="bg-slate-100 p-2.5 rounded-xl text-slate-500">
+                                <i id="display-icon" class="fa-solid fa-hand-pointer text-lg animate-bounce"></i>
+                            </div>
+                            <div>
+                                <h3 id="display-title" class="text-sm font-bold text-slate-900">Clicking Indicator</h3>
+                                <p id="display-subtitle" class="text-xs text-slate-500">Awaiting graph point interaction</p>
+                            </div>
+                        </div>
+
+                        <!-- Data Readouts -->
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-5">
+                            <div class="bg-slate-50 border border-slate-100 rounded-xl p-3.5 text-center">
+                                <span class="text-[10px] text-slate-500 uppercase tracking-wide font-semibold block">Time After Planting (x)</span>
+                                <span id="readout-x" class="text-xl font-bold text-slate-800 math-font">--</span>
+                                <span class="text-xs text-slate-500 block">Days (DAP)</span>
+                            </div>
+                            <div class="bg-slate-50 border border-slate-100 rounded-xl p-3.5 text-center">
+                                <span class="text-[10px] text-slate-500 uppercase tracking-wide font-semibold block">Paddy Height f(x)</span>
+                                <span id="readout-fx" class="text-xl font-bold text-emerald-700 math-font">--</span>
+                                <span class="text-xs text-slate-500 block">Centimeters (cm)</span>
+                            </div>
+                            <div class="bg-slate-50 border border-slate-100 rounded-xl p-3.5 text-center relative overflow-hidden">
+                                <span class="text-[10px] text-slate-500 uppercase tracking-wide font-semibold block">Daily Growth Rate f'(x)</span>
+                                <span id="readout-fpx" class="text-xl font-bold text-amber-600 math-font">--</span>
+                                <span class="text-xs text-slate-500 block">cm / Day (Derivative)</span>
+                            </div>
+                        </div>
+
+                        <!-- Layman Explanation Box -->
+                        <div class="bg-emerald-50/50 border border-emerald-100/50 rounded-xl p-4">
+                            <span class="text-xs font-bold text-emerald-800 uppercase tracking-wider flex items-center gap-1.5 mb-1.5">
+                                <i class="fa-solid fa-circle-info text-emerald-600"></i>
+                                Layman & Agronomic Explanation:
+                            </span>
+                            <p id="layman-text" class="text-xs sm:text-sm text-slate-600 leading-relaxed">
+                                Click anywhere on the curve to see the real-time crop analysis. Bioscience modeling helps researchers target exact intervention times to safeguard food security metrics.
+                            </p>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Footnote Credits -->
+    <footer class="bg-slate-100 border-t border-slate-200 py-4 shrink-0">
+        <div class="max-w-7xl mx-auto px-4 text-center text-[11px] text-slate-500">
+            Paddy Growth Optimization Model Developed for Malaysian Bioscience Undergraduate Curriculum Study. Data points based on standardized MARDI growth templates.
+        </div>
+    </footer>
+
+    <!-- JavaScript Calculations, Event Handlers and Chart Setup -->
+    <script>
+        // Configuration Constants for Scenarios
+        const scenarios = {
+            optimal: {
+                L: 110,      // Max Height in cm (Typical mature MR297 height)
+                k: 0.08,     // Rate coefficient
+                x0: 55,      // Inflection Point Day (Mid-growth peak)
+                title: "Optimal Growth Season",
+                desc: "Baseline growth data model under normal Malaysian weather and regular fertilizing cycles.",
+                accent: "emerald"
+            },
+            drought: {
+                L: 85,       // Growth limited by El Niño water stress
+                k: 0.065,    // Slower cell elongation
+                x0: 62,      // Delayed inflection due to root damage
+                title: "Drought Stressed Season",
+                desc: "Simulates severe water stress, depicting stunted height and delayed maturity.",
+                accent: "amber"
+            },
+            optimized: {
+                L: 115,      // Enhanced height with organic nutrient supplements
+                k: 0.095,    // Steep, accelerated vegetative phase
+                x0: 50,      // Accelerated peak vegetative phase
+                title: "Nitrogen-Optimized Growth",
+                desc: "Simulates targeted fertilizing at day 15 and 45. Results in accelerated biomass growth.",
+                accent: "sky"
+            }
+        };
+
+        let currentScenarioKey = 'optimal';
+        let chartInstance = null;
+
+        // Mathematical Function f(x) - Height of paddy over days
+        function evaluateFX(x, params) {
+            const power = -params.k * (x - params.x0);
+            return params.L / (1 + Math.exp(power));
+        }
+
+        // First Derivative Function f'(x) - Rate of height growth (cm/day)
+        function evaluateFPX(x, params) {
+            const power = -params.k * (x - params.x0);
+            const expTerm = Math.exp(power);
+            const denominator = Math.pow(1 + expTerm, 2);
+            return (params.L * params.k * expTerm) / denominator;
+        }
+
+        // Generates targeted bioscience layman insights dynamically for the selected point
+        function getLaymanExplanation(day, height, rate, params) {
+            const variety = "Variety MR297";
+            const SSLTarget = "rice self-sufficiency";
+            
+            if (day <= 25) {
+                return `<strong>Early Tillering Stage (Days 0-25):</strong> The paddy has a low daily elongation rate of <strong>${rate.toFixed(2)} cm/day</strong> because seedling transplants are establishing root structures. Adding nitrogen fertilizer now yields poor returns due to low vegetative demand. Keep shallow water levels (2-3 cm).`;
+            } 
+            else if (day > 25 && day <= 48) {
+                return `<strong>Active Vegetative & Tillering Stage (Days 26-48):</strong> Cellular elongation is accelerating quickly! The daily growth rate is rising to <strong>${rate.toFixed(2)} cm/day</strong>. This vegetative acceleration represents a critical carbon-sinking phase. Ensure first active split fertilizer dosing is completed to maximize tiller counts.`;
+            } 
+            else if (day > 48 && day <= 62) {
+                // Peak growth around inflection point
+                let stressNote = "";
+                if (currentScenarioKey === 'drought') {
+                    stressNote = " Due to current El Niño drought simulations, the peak elongation speed is heavily capped, threatening future panicle sizes.";
+                } else if (currentScenarioKey === 'optimized') {
+                    stressNote = " Precision soil supplements have boosted development, bringing the peak forward to maximize yield capacity.";
+                }
+                return `<strong>Panicle Initiation Stage (Days 49-62):</strong> Peak vegetative growth is occurring at <strong>${rate.toFixed(2)} cm/day</strong>. This represents the absolute inflection point of development. High water demands are essential to secure healthy spikelets and avoid sterile grains. Daily micro-adjustments here directly determine Malaysia's national yield tonnage.`;
+            } 
+            else if (day > 62 && day <= 90) {
+                return `<strong>Heading & Flowering Stage (Days 63-90):</strong> The daily vegetative growth derivative is dropping to <strong>${rate.toFixed(2)} cm/day</strong> as the height approaches its upper asymptote of <strong>${params.L} cm</strong>. Plant priorities shift from height development to grain reproductive starch allocation. Keep water levels steady for grain filling.`;
+            } 
+            else {
+                return `<strong>Ripening & Harvest Preparation Stage (Days 91-120):</strong> Crop height has stabilized entirely with a near-zero growth derivative (<strong>${rate.toFixed(2)} cm/day</strong>). The grains are transitioning to mature gold. Dry the fields completely 10 days prior to harvest to ease commercial mechanical combine operations and secure crop moisture properties.`;
+            }
+        }
+
+        // Triggered when clicking a specific scenario button
+        function setScenario(scenarioKey) {
+            currentScenarioKey = scenarioKey;
+            
+            // Reset Button Classes
+            ['optimal', 'drought', 'optimized'].forEach(key => {
+                const btn = document.getElementById(`btn-${key}`);
+                const badge = btn.querySelector('span:last-child');
+                
+                btn.className = "w-full text-left p-3.5 rounded-xl border transition duration-150 flex items-center justify-between ";
+                if (key === scenarioKey) {
+                    if (key === 'optimal') {
+                        btn.className += "border-2 border-emerald-500 bg-emerald-50/50";
+                        badge.className = "bg-emerald-600 text-white text-[10px] py-0.5 px-2 rounded-full font-semibold";
+                        badge.innerHTML = "Active";
+                    } else if (key === 'drought') {
+                        btn.className += "border-2 border-amber-500 bg-amber-50/50";
+                        badge.className = "bg-amber-600 text-white text-[10px] py-0.5 px-2 rounded-full font-semibold";
+                        badge.innerHTML = "Active";
+                    } else if (key === 'optimized') {
+                        btn.className += "border-2 border-sky-500 bg-sky-50/50";
+                        badge.className = "bg-sky-600 text-white text-[10px] py-0.5 px-2 rounded-full font-semibold";
+                        badge.innerHTML = "Active";
+                    }
+                } else {
+                    btn.className += "border-slate-200 hover:bg-slate-50";
+                    badge.className = "text-slate-400 text-[10px]";
+                    badge.innerHTML = '<i class="fa-solid fa-circle text-xs"></i>';
+                }
+            });
+
+            // Rebuild the data arrays and update the plot
+            updateChart();
+            
+            // Re-evaluate current day details based on the new scenario curves
+            const lastActiveDay = parseInt(document.getElementById('readout-x').innerText) || 55;
+            displayMetrics(lastActiveDay);
+        }
+
+        // Re-construct the chart data according to selected parameters
+        function updateChart() {
+            const params = scenarios[currentScenarioKey];
+            const days = Array.from({length: 121}, (_, i) => i); // Days 0 to 120
+            const heightData = days.map(d => evaluateFX(d, params));
+            const rateData = days.map(d => evaluateFPX(d, params));
+
+            chartInstance.data.labels = days;
+            chartInstance.data.datasets[0].data = heightData;
+            chartInstance.data.datasets[1].data = rateData;
+            
+            // Theme Colors for line accent adjustments
+            let primaryColor = '#059669'; // Emerald-600
+            let secondaryColor = '#d97706'; // Amber-600
+            if (currentScenarioKey === 'drought') {
+                primaryColor = '#d97706';
+                secondaryColor = '#b45309';
+            } else if (currentScenarioKey === 'optimized') {
+                primaryColor = '#0284c7';
+                secondaryColor = '#f59e0b';
+            }
+
+            chartInstance.data.datasets[0].borderColor = primaryColor;
+            chartInstance.data.datasets[0].backgroundColor = primaryColor + '15';
+            chartInstance.data.datasets[1].borderColor = secondaryColor;
+            chartInstance.data.datasets[1].backgroundColor = secondaryColor + '10';
+
+            chartInstance.update('none'); // Update without full entrance animation
+        }
+
+        // Update the display cards with dynamic results and agronomic guidelines
+        function displayMetrics(day) {
+            const params = scenarios[currentScenarioKey];
+            const height = evaluateFX(day, params);
+            const rate = evaluateFPX(day, params);
+
+            // Set UI details
+            document.getElementById('readout-x').innerText = day;
+            document.getElementById('readout-fx').innerText = height.toFixed(1);
+            document.getElementById('readout-fpx').innerText = rate.toFixed(3);
+
+            // Apply conditional colors/border indicators to dynamic-display
+            const displayBox = document.getElementById('dynamic-display');
+            const iconBg = document.getElementById('display-icon-bg');
+            const icon = document.getElementById('display-icon');
+            const title = document.getElementById('display-title');
+            const subtitle = document.getElementById('display-subtitle');
+            
+            // Clean up old classes
+            displayBox.className = "bg-white rounded-2xl shadow-sm p-6 transition duration-300 border-2 ";
+            iconBg.className = "p-2.5 rounded-xl ";
+            icon.className = "fa-solid text-lg ";
+
+            // Theme matching logic
+            if (currentScenarioKey === 'optimal') {
+                displayBox.className += "border-emerald-400";
+                iconBg.className += "bg-emerald-50 text-emerald-600";
+                icon.className += "fa-seedling";
+                title.innerText = `Optimal Growth Season Data (Day ${day})`;
+            } else if (currentScenarioKey === 'drought') {
+                displayBox.className += "border-amber-400";
+                iconBg.className += "bg-amber-50 text-amber-600";
+                icon.className += "fa-temperature-high";
+                title.innerText = `El Niño Stress Analysis (Day ${day})`;
+            } else {
+                displayBox.className += "border-sky-400";
+                iconBg.className += "bg-sky-50 text-sky-600";
+                icon.className += "fa-flask-vial";
+                title.innerText = `Nitrogen-Optimized Crop Metrics (Day ${day})`;
+            }
+            
+            subtitle.innerText = `Analytical evaluations computed via local derivative models`;
+
+            // Display localized explanation
+            const explanationText = getLaymanExplanation(day, height, rate, params);
+            document.getElementById('layman-text').innerHTML = explanationText;
+        }
+
+        window.onload = function() {
+            const params = scenarios.optimal;
+            const days = Array.from({length: 121}, (_, i) => i);
+            const heightData = days.map(d => evaluateFX(d, params));
+            const rateData = days.map(d => evaluateFPX(d, params));
+
+            const ctx = document.getElementById('growthChart').getContext('2d');
+            chartInstance = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: days,
+                    datasets: [
+                        {
+                            label: 'Paddy Height (f(x) in cm)',
+                            data: heightData,
+                            borderColor: '#059669',
+                            backgroundColor: '#05966915',
+                            borderWidth: 3,
+                            fill: true,
+                            tension: 0.1,
+                            yAxisID: 'yHeight',
+                            pointRadius: 0,
+                            pointHoverRadius: 6,
+                        },
+                        {
+                            label: "Daily Growth Rate (f'(x) in cm/day)",
+                            data: rateData,
+                            borderColor: '#d97706',
+                            backgroundColor: '#d9770610',
+                            borderWidth: 2,
+                            borderDash: [4, 4],
+                            fill: true,
+                            tension: 0.1,
+                            yAxisID: 'yRate',
+                            pointRadius: 0,
+                            pointHoverRadius: 6,
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    interaction: {
+                        mode: 'index',
+                        intersect: false,
+                    },
+                    plugins: {
+                        legend: {
+                            display: false // We use our custom legend styled via tailwind instead
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.dataset.label || '';
+                                    if (label) {
+                                        label += ': ';
+                                    }
+                                    if (context.parsed.y !== null) {
+                                        label += context.parsed.y.toFixed(2);
+                                    }
+                                    return label;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Days After Planting (DAP)',
+                                color: '#475569',
+                                font: {
+                                    weight: 'bold',
+                                    size: 11
+                                }
+                            },
+                            grid: {
+                                color: '#f1f5f9'
+                            }
+                        },
+                        yHeight: {
+                            type: 'linear',
+                            display: true,
+                            position: 'left',
+                            min: 0,
+                            max: 130,
+                            title: {
+                                display: true,
+                                text: 'Plant Height (cm)',
+                                color: '#059669',
+                                font: {
+                                    weight: 'bold',
+                                    size: 11
+                                }
+                            },
+                            grid: {
+                                color: '#f1f5f9'
+                            }
+                        },
+                        yRate: {
+                            type: 'linear',
+                            display: true,
+                            position: 'right',
+                            min: 0,
+                            max: 4,
+                            title: {
+                                display: true,
+                                text: 'Instantaneous Daily Growth (cm/day)',
+                                color: '#d97706',
+                                font: {
+                                    weight: 'bold',
+                                    size: 11
+                                }
+                            },
+                            grid: {
+                                drawOnChartArea: false // prevent grid line overlapping
+                            }
+                        }
+                    },
+                    onClick: (event, activeElements) => {
+                        if (activeElements.length > 0) {
+                            // Extract index representing Day (0-120)
+                            const clickedDay = activeElements[0].index;
+                            displayMetrics(clickedDay);
+                        }
+                    }
+                }
+            });
+
+            // Populate baseline view on load with standard peak inflection analysis (Day 55)
+            displayMetrics(55);
+        };
+    </script>
+</body>
+</html>
